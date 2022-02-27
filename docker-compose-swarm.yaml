@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+    proxy:
+        image: enchoenchev/bgapp-proxy
+        ports:
+            - 8080:80
+        deploy:
+            replicas: 3
+        volumes:
+            - "${PROJECT_ROOT}:/var/www/html:ro"
+        networks:
+            - app-network
+    web:
+        image: enchoenchev/bgapp-web
+        expose:
+            - 9000
+        deploy:
+            replicas: 5
+        volumes:
+            - "${PROJECT_ROOT}:/var/www/html:ro"
+        networks:
+            - app-network
+    db:
+        image: enchoenchev/bgapp-db
+        networks:
+            - app-network
+        environment:
+            MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+networks:
+    app-network:
